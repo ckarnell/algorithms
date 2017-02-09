@@ -16,6 +16,22 @@ class Graph():
         assert(to_node in self.nodes), "The from node must already be in the graph"
         self.edges[from_node].append(to_node)
 
+    # Return a list of the nodes in BFS order.
+    def BFS_order(self, origin_node):
+        assert (origin_node in self.nodes)
+        nodes = [origin_node]
+        visited = []
+        ordered = []
+
+        while nodes:
+            current_node = nodes.pop(0)
+            visited.append(current_node)
+            ordered.append(current_node)
+            for node in self.edges[current_node]:
+                if node not in visited:
+                    nodes.append(node)
+        return ordered
+
 if __name__ == "__main__":
     import unittest
 
@@ -43,5 +59,24 @@ if __name__ == "__main__":
             graph.add_node('b')
             graph.add_edge('a', 'b')
             self.assertEqual(graph.edges['a'], ['b'])
+
+        def test_BFS_order(self):
+            graph = Graph()
+            for l in list('abcdefghijkl'):
+                graph.add_node(l)
+
+            graph.add_edge('a', 'b')
+            graph.add_edge('a', 'c')
+            graph.add_edge('a', 'd')
+            graph.add_edge('b', 'e')
+            graph.add_edge('b', 'f')
+            graph.add_edge('d', 'g')
+            graph.add_edge('d', 'h')
+            graph.add_edge('e', 'i')
+            graph.add_edge('e', 'j')
+            graph.add_edge('g', 'k')
+            graph.add_edge('g', 'l')
+
+            self.assertEqual(graph.BFS_order('a'), list('abcdefghijkl'))
 
     unittest.main()
