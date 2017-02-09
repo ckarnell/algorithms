@@ -32,6 +32,29 @@ class Graph():
                     nodes.append(node)
         return ordered
 
+    # Helper function for recursion.
+    def DFS_helper(self, origin_node, visited, ordered):
+        ordered.append(origin_node)
+
+        if set(visited).issuperset(set(self.edges[origin_node])):
+            return
+
+        visited.append(origin_node)
+        for node in self.edges[origin_node]:
+            if node not in visited:
+                visited.append(node)
+                self.DFS_helper(node, visited, ordered)
+
+        return ordered
+
+    # Return a list of the nodes in DFS order.
+    def DFS_order(self, origin_node):
+        assert (origin_node in self.nodes)
+        visited = [origin_node]
+        ordered = []
+
+        return self.DFS_helper(origin_node, visited, ordered)
+
 if __name__ == "__main__":
     import unittest
 
@@ -78,5 +101,24 @@ if __name__ == "__main__":
             graph.add_edge('g', 'l')
 
             self.assertEqual(graph.BFS_order('a'), list('abcdefghijkl'))
+
+        def test_DFS_order(self):
+            graph = Graph()
+            for l in list('abcdefghijkl'):
+                graph.add_node(l)
+
+            graph.add_edge('a', 'b')
+            graph.add_edge('a', 'c')
+            graph.add_edge('a', 'd')
+            graph.add_edge('b', 'e')
+            graph.add_edge('b', 'f')
+            graph.add_edge('d', 'g')
+            graph.add_edge('d', 'h')
+            graph.add_edge('e', 'i')
+            graph.add_edge('e', 'j')
+            graph.add_edge('g', 'k')
+            graph.add_edge('g', 'l')
+
+            self.assertEqual(graph.DFS_order('a'), list('abeijfcdgklh'))
 
     unittest.main()
