@@ -11,10 +11,14 @@ class LinkedList():
     # Adds a node to the tail of the linked list.
     def append_node(self, node):
         tail = self.head
-        # Find the first node that doesn't point to another node.
-        while tail.next_node:
-            tail = tail.next_node
-        tail.next_node = node
+        if tail != None:
+            # Find the first node that doesn't point to another node.
+            while tail.next_node:
+                tail = tail.next_node
+            tail.next_node = node
+        else:
+            self.head = node
+
         self.length += 1
 
     # Makes the argument node the linked list's new head node.
@@ -46,11 +50,39 @@ if __name__ == '__main__':
 
     class LinkedListTest(unittest.TestCase):
         def setUp(self):
-            pass
+            self.ll = LinkedList()
 
         def test_instantiate_linked_list(self):
-            ll = LinkedList()
-            self.assertEqual(ll.length, 0)
-            self.assertEqual(ll.head, None)
+            self.assertEqual(self.ll.length, 0)
+            self.assertEqual(self.ll.head, None)
+
+        def test_instantiate_node_data_types(self):
+            node_int = Node(8)
+            node_float = Node(5.0)
+            node_string = Node("test")
+            node_bool = Node(True)
+            self.assertEqual(node_int.data, 8)
+            self.assertEqual(node_int.next_node, None)
+            self.assertEqual(node_float.data, 5.0)
+            self.assertEqual(node_float.next_node, None)
+            self.assertEqual(node_string.data, "test")
+            self.assertEqual(node_string.next_node, None)
+            self.assertEqual(node_bool.data, True)
+            self.assertEqual(node_bool.next_node, None)
+
+        def test_append_a_node(self):
+            node = Node("test")
+            self.ll.append_node(node)
+            self.assertEqual(self.ll.head, node)
+            self.assertEqual(self.ll.length, 1)
+
+        def test_append_two_nodes(self):
+            node1 = Node(10)
+            node2 = Node("test")
+            self.ll.append_node(node1)
+            self.ll.append_node(node2)
+            self.assertEqual(self.ll.head.data, 10)
+            self.assertEqual(self.ll.head.next_node.data, "test")
+            self.assertEqual(self.ll.length, 2)
 
     unittest.main()
