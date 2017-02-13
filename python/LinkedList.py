@@ -32,18 +32,20 @@ class LinkedList():
     # Returns an error if there isn't such a node.
     def remove_node(self, data):
         current_node = self.head
-        if current_node.data == data:
+        if current_node == None:
+            raise IndexError, "Can't remove a node from an empty linked list"
+        elif current_node.data == data:
             self.head = current_node.next_node
+            self.length -= 1
         else:
             while current_node.next_node and current_node.data != data:
                 previous_node = current_node
-                current_node = current_node.next
+                current_node = current_node.next_node
             if current_node.next_node:
                 previous_node.next_node = current_node.next_node
                 self.length -= 1
             else:
-                print "There is no node with the input data"
-                raise IndexError
+                raise IndexError, "There is no node with the input data"
 
     # Prints the nodes. The "out" argument is used only for testing.
     def print_nodes(self, out=None):
@@ -96,8 +98,55 @@ if __name__ == '__main__':
             self.assertEqual(self.ll.head.next_node.next_node, None)
             self.assertEqual(self.ll.length, 2)
 
-        def test_prepend_node(self):
+        def test_prepend_node_on_empty_linked_list(self):
             node = Node("test")
+            self.ll.prepend_node(node)
+            self.assertEqual(self.ll.head, node)
+            self.assertEqual(self.ll.length, 1)
+
+        def test_prepend_multiple_nodes(self):
+            node1 = Node(10)
+            node2 = Node("test")
+            self.ll.prepend_node(node1)
+            self.ll.prepend_node(node2)
+            self.assertEqual(self.ll.head, node2)
+            self.assertEqual(self.ll.head.next_node, node1)
+            self.assertEqual(self.ll.length, 2)
+
+        def test_remove_node_from_empty_list(self):
+            try:
+                self.ll.remove_node(5)
+            except IndexError:
+                self.assertEqual(self.ll.head, None)
+                self.assertEqual(self.ll.length, 0)
+
+        def test_remove_existing_node_from_list_of_length_one(self):
+            node = Node("test")
+            self.ll.append_node(node)
+            self.ll.remove_node(node.data)
+            self.assertEqual(self.ll.head, None)
+            self.assertEqual(self.ll.length, 0)
+
+        def test_remove_existing_nodes_from_list_of_length_four(self):
+            nodes = [Node(5), Node("test"), Node(True), Node(1.5)]
+            for node in nodes:
+                self.ll.append_node(node)
+
+            # Remove two inner nodes.
+            self.ll.remove_node("test")
+            self.ll.remove_node(True)
+            self.assertEqual(self.ll.head.data, 5)
+            self.assertEqual(self.ll.head.next_node.data, 1.5)
+            self.assertEqual(self.ll.head.next_node.next_node, None)
+            self.assertEqual(self.ll.length, 2)
+            # Remove the head.
+            self.ll.remove_node(5)
+            self.assertEqual(self.ll.head.data, 1.5)
+            self.assertEqual(self.ll.head.next_node, None)
+            # Remove the last node.
+            self.ll.remove_node(1.5)
+            self.assertEqual(self.ll.head, None)
+            self.assertEqual(self.ll.length, 0)
 
         def test_print_nodes(self):
             node1, node2, node3 = [Node(5), Node("test"), Node(True)]
