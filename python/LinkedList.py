@@ -45,6 +45,16 @@ class LinkedList():
                 print "There is no node with the input data"
                 raise IndexError
 
+    # Prints the nodes. The "out" argument is used only for testing.
+    def print_nodes(self, out=None):
+        current_node = self.head
+        for ind in range(self.length):
+            if out:
+                out.write("Node {}: {}".format(ind+1, current_node.data))
+            else:
+                print "Node {}: {}".format(ind+1, current_node.data)
+            current_node = current_node.next_node
+
 if __name__ == '__main__':
     import unittest
 
@@ -83,6 +93,21 @@ if __name__ == '__main__':
             self.ll.append_node(node2)
             self.assertEqual(self.ll.head.data, 10)
             self.assertEqual(self.ll.head.next_node.data, "test")
+            self.assertEqual(self.ll.head.next_node.next_node, None)
             self.assertEqual(self.ll.length, 2)
+
+        def test_prepend_node(self):
+            node = Node("test")
+
+        def test_print_nodes(self):
+            node1, node2, node3 = [Node(5), Node("test"), Node(True)]
+            for node in [node1, node2, node3]:
+                self.ll.append_node(node)
+
+            from StringIO import StringIO
+            out = StringIO()
+            self.ll.print_nodes(out=out)
+            output = out.getvalue().strip()
+            self.assertEqual(output, "Node 1: 5Node 2: testNode 3: True")
 
     unittest.main()
