@@ -57,26 +57,6 @@ class Graph():
 
         return self.DFS_helper(origin_node, visited, ordered)
 
-    def DFS_search(self, origin_node, data):
-        if origin_node.data == data:
-            return origin_node
-        visited = []
-
-        return DFS_search_recurse(current_node, visited, data)
-
-    def DFS_search_recurse(self, current_node, visited, data):
-        if current_node.data == data:
-            return current_node
-        if visited.issuperset(set(self.edges[current_node])):
-            raise IndexError, "Node with desired data does not exist"
-            return None
-
-        for node in self.edges[current_node]:
-            if node not in visited:
-                visited.append(node)
-                result = self.DFS_search_recurse(node, visited, data)
-        return result
-
 if __name__ == "__main__":
     import unittest
 
