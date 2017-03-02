@@ -44,14 +44,12 @@ def max_slice_finder(l):
                 saved_max += num
             else:
                 saved_max += num
-                absolute_max = max(absolute_max, saved_max)
 
-            absolute_max = max(absolute_max, local_max)
+            absolute_max = max(absolute_max, local_max, saved_max)
             local_max = num
         else:
             if local_max < 0:
                 local_max = num
-                absolute_max = max(absolute_max, local_max)
             else:
                 local_max += num
                 absolute_max = max(absolute_max, local_max)
@@ -60,8 +58,9 @@ def max_slice_finder(l):
             else:
                 saved_max += num
 
-    return max(absolute_max, local_max, saved_max)
+            absolute_max = max(absolute_max, local_max, saved_max)
 
+    return absolute_max 
 
 if __name__ == "__main__":
     import unittest
