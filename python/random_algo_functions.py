@@ -62,6 +62,13 @@ def max_slice_finder(l):
 
     return absolute_max 
 
+# Simple fibionacci series solver.
+def fib(num):
+    if num in [1, 0]:
+        return 1
+    else:
+        return fib(num - 1) + fib(num - 2)
+
 if __name__ == "__main__":
     import unittest
 
@@ -78,6 +85,10 @@ if __name__ == "__main__":
             inputs = (([-1], -1), ([-1, 5, 6, -20, 10, 11, -2, 20, -5], sum([10, 11, -2, 20])),
                       ([-20, -30, -40, -10, -100], -10), ([-5, 10, -20, -30, 5, 6, -50], 11))
             self.assertTrue(all(max_slice_finder(t[0]) == t[1] for t in inputs))
+
+        def test_fib(self):
+            inputs = ((1, 1), (0, 1), (3, 2), (5, 8))
+            self.assertTrue(all(fib(i[0]) == i[1]) for i in inputs)
 
     unittest.main()
 
