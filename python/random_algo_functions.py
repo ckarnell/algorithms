@@ -69,6 +69,15 @@ def fib(num):
     else:
         return fib(num - 1) + fib(num - 2)
 
+# Simple function that takes who sequences and returns a sequence
+# with alternating elements.
+def alternator(seq1, seq2):
+    result = zip(seq1, seq2)
+    if result:
+        return list(reduce(lambda x, y: x + y, result))
+    else:
+        return []
+
 if __name__ == "__main__":
     import unittest
 
@@ -89,6 +98,12 @@ if __name__ == "__main__":
         def test_fib(self):
             inputs = ((1, 1), (0, 1), (3, 2), (5, 8))
             self.assertTrue(all(fib(i[0]) == i[1]) for i in inputs)
+
+        def test_alternator(self):
+            inputs = ((([], []), []),
+                      (([1, 2, 3], [4, 5, 6]), [1, 4, 2, 5, 3, 6]),
+                      (([1, 2, 3], ['4', '5', '6', '7']), [1, '4', 2, '5', 3, '6']))
+            self.assertTrue(all(alternator(t[0][0], t[0][1]) == t[1] for t in inputs))
 
     unittest.main()
 
