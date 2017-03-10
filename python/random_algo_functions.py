@@ -21,7 +21,7 @@ def func(str1):
 
     def return_func(str2):
         return final_str + str2
-    
+
     return return_func
 
 # Given a list of numbers, return a number equal to the
@@ -78,6 +78,48 @@ def alternator(seq1, seq2):
     else:
         return []
 
+# Returns True if the two input strings are anagrams,
+# or False if they are not
+def anagram_checker(str1, str2):
+    lstr2 = list(str2)
+    for c in str1:
+        try: 
+            lstr2.remove(c)
+        except ValueError:
+            return False
+    if not lstr2:
+        return True
+    return False
+
+# Validates strings with different combinations of brackets
+def bracket_validator(brack):
+    openers, closers = ['{', '[', '('], ['}', ']', ')']
+    stack = []
+    for c in brack:
+        if c in openers:
+            stack.append(c)
+        elif c in closers:
+            try:
+                char = stack.pop(-1)
+                if char != c:
+                    return False
+            except IndexError:
+                return False
+    if not stack:
+        return True
+
+# You have an array of numbers. You want this array of numbers to be in ascending order. 
+# Consider a number d. You can add/subtract any number in your array by any number <= d. 
+# What is the smallest d you could use to make the array ascending?
+def smallest_ascending_k(arr):
+    prev = arr[0]
+    current_k = 0
+    for el in arr[1:]:
+        if el + current_k <= prev - current_k:
+            current_k = ((prev - el) / 2) + 1
+        prev = el
+    return current_k
+
 if __name__ == "__main__":
     import unittest
 
@@ -104,6 +146,23 @@ if __name__ == "__main__":
                       (([1, 2, 3], [4, 5, 6]), [1, 4, 2, 5, 3, 6]),
                       (([1, 2, 3], ['4', '5', '6', '7']), [1, '4', 2, '5', 3, '6']))
             self.assertTrue(all(alternator(t[0][0], t[0][1]) == t[1] for t in inputs))
+
+        def test_anagram_checker_valid(self):
+            inputs = (['heyhey', 'yehyeh'],
+                      ['', ''],
+                      ['ddbbee', 'ebdbde'])
+            self.assertTrue(all(anagram_checker(*i) for i in inputs))
+
+        def test_anagram_checker_invalid(self):
+            inputs = (['heyhey', 'ehyeh'],
+                      ['', 'h'],
+                      ['ddbbee', ''])
+            self.assertFalse(any(anagram_checker(*i) for i in inputs))
+
+        def test_smallest_ascending_k(self):
+            inputs = (([5,1,3], 3),
+                      ([1,2,6,0,10], 4),)
+            self.assertTrue(all(smallest_ascending_k(i[0]) == i[1] for i in inputs))
 
     unittest.main()
 
