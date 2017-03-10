@@ -120,6 +120,41 @@ def smallest_ascending_k(arr):
         prev = el
     return current_k
 
+# Given a starting point A and an ending point B (both integers), this algorithm
+# will find the total number of perfect squares between A and B inclusive using
+# Neuton's method
+def total_perfect_squares(A, B):
+    def neutons_method(num):
+        if num == 1:
+            return True
+        left = 0
+        right = num
+        old_middle = 0
+        middle = (right - left) / 2
+        while old_middle != middle:
+            res = middle * middle
+            if res == num:
+                return True
+            elif res > num:
+                right = middle
+            else:
+                left = middle
+            old_middle = middle
+            if left + ((right - float(left)) / 2) == left + ((right - left) / 2):
+                middle = left + ((right - left) / 2)
+            else:
+                middle = left + ((right - left) / 2) + 1
+        res = middle * middle
+        if res == num:
+            return True
+        return False
+
+    tot = 0
+    for x in range(A, B+1):
+        if neutons_method(x):
+            tot += 1
+    return tot
+
 if __name__ == "__main__":
     import unittest
 
@@ -163,6 +198,13 @@ if __name__ == "__main__":
             inputs = (([5,1,3], 3),
                       ([1,2,6,0,10], 4),)
             self.assertTrue(all(smallest_ascending_k(i[0]) == i[1] for i in inputs))
+
+        def test_total_perfect_squares(self):
+            inputs = (([1, 100], 10),
+                      ([1, 200], 14),
+                      ([1, 1], 1),
+                      ([49, 100], 4))
+            self.assertTrue(all(total_perfect_squares(i[0][0], i[0][1]) == i[1] for i in inputs))
 
     unittest.main()
 
