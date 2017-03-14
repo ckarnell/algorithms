@@ -14,8 +14,8 @@ def flattener(l):
     flattener_recurse(l)
     return flattened
 
-# func("Hello ")("world!") returns "Hello world!".
-# This is a functional question asked for a job interview.
+# This was a functional question asked for a job interview at Enigma.io
+# Write a function such that func("Hello ")("world!") returns "Hello world!".
 def func(str1):
     final_str = str1
 
@@ -152,10 +152,10 @@ def smallest_ascending_k(arr):
 
 # Given a starting point A and an ending point B (both integers), this algorithm
 # will find the total number of perfect squares between A and B inclusive using
-# Neuton's method
+# the bisection method.
 def total_perfect_squares(A, B):
-    def neutons_method(num):
-        # Uses Neuton's bisection method to find out if the root of 
+    def bisection_method(num):
+        # Uses the bisection method to find out if the root of 
         # the given number is an integer
         if num in [0, 1]:
             return True
@@ -183,9 +183,62 @@ def total_perfect_squares(A, B):
 
     tot = 0
     for x in range(A, B+1):
-        if neutons_method(x):
+        if bisection_method(x):
             tot += 1
     return tot
+
+# This was for a coding test for Blue Mountain Capital.
+# Algorithm that takes in a list of comma seperated triplets, that represent
+# the value, left leaf, and right leaf of a node, respectively. This
+# algorithm should return the minimum level of the tree such that a node
+# on that level is missing either a left or right leaf. The first triplet is the
+# root node and following lines are branches/leaves of previous lines.
+def minimum_level(graph_list):
+    graph_list = [triple.split(',') for triple in graph_list]
+
+    def add_node(triple, graph):
+        node_name = triple[0]
+        left, right = triple[1], triple[2]
+        if node_name not in graph:
+            graph[node_name] = {'left': '', 'right': ''}
+        if not graph[node_name]['left']:
+            graph[node_name]['left'] = left
+        if not graph[node_name]['right']:
+            graph[node_name]['right'] = right
+        # Add the left/right nodes to the graph if they're not
+        # already in
+        if left and left not in graph:
+            graph[left] = {'left': '', 'right': ''}
+        if right and right not in graph:
+            graph[right] = {'left': '', 'right': ''}
+
+        return graph
+
+    def get_next_level(graph, nodes):
+        '''
+        Returns the next level of the graph, or False if one of the
+        current nodes lacks either a right or left branch
+        '''
+        next_level = []
+        for node in nodes:
+            if not graph[node]['left'] or not graph[node]['right']:
+                return False
+            next_level.append(graph[node]['left'])
+            next_level.append(graph[node]['right'])
+        return next_level
+
+    graph = {}
+    # Get ahold of root for later
+    root = graph_list[0]
+    graph = add_node(root, graph)
+    for triple in graph_list[1:]:
+        graph = add_node(triple, graph)
+    level = -1
+    next_level = [root[0]]
+    while next_level:
+        next_level = get_next_level(graph, next_level)
+        level += 1
+    return level
 
 if __name__ == "__main__":
     import unittest
@@ -240,8 +293,15 @@ if __name__ == "__main__":
 
         def test_min_max_finder(self):
             inputs = ((([5, 5, 5, 2, 5, 5, 5], 2), 3),)
-            print "HIHI: " + str(min_max_finder(inputs[0][0][0], inputs[0][0][1]))
             self.assertTrue(all(min_max_finder(i[0][0], i[0][1]) == i[1] for i in inputs))
+
+        def test_minimum_level(self):
+            inputs = ((['a,b,c', 'b,d,e'], 1),
+                      (['a,b,c', 'b,d,e', 'c,f,g', 'd,h,i', 'e,j,k', 'g,l,m'], 2),
+                      (['a,b,c', 'b,d,e', 'c,f,g', 'd,h,i', 'e,j,k', 'f,l,m', 'g,n,o'], 3),
+                      (['a,b,c', 'b,,e', 'c,f,g', 'e,j,k', 'f,l,m', 'g,n,o'], 1))
+
+            self.assertTrue(all(minimum_level(i[0]) == i[1] for i in inputs))
 
     unittest.main()
 
