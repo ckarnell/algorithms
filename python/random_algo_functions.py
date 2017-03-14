@@ -62,7 +62,37 @@ def max_slice_finder(l):
 
     return absolute_max 
 
-# Simple fibionacci series solver.
+# Given a list of numbers and a number k, find the subarray 
+# of length k with the greatest min/max difference
+def min_max_finder(arr, k):
+    length = len(arr)
+    assert length > k, "Array must have a length greater than k"
+    loc_max = max(arr[:k])
+    loc_min = min(arr[:k])
+    max_diff = loc_max - loc_min
+    ind = k+1
+    while ind < length-1:
+        # We only have to check for new max/mins when we find
+        # a number greater or lower than our current max/min
+        if arr[ind] > loc_max:
+            high = k+ind if k+ind < length-1 else length-1
+            min_in_area_around_ind = min(arr[ind-k:high])
+            if arr[ind] - min_in_area_around_ind > max_diff:
+                local_max = arr[ind]
+                local_min = min_in_area_around_ind
+                max_diff = local_max - local_min
+        elif arr[ind] < loc_min:
+            high = k+ind if k+ind < length-1 else length-1
+            max_in_area_around_ind = max(arr[ind-k:high])
+            if max_in_area_around_ind  - arr[ind] > max_diff:
+                local_max = max_in_area_around_ind
+                local_min = arr[ind]
+                max_diff = local_max - local_min
+        ind += 1
+    return max_diff
+
+# Simple fibionacci series solver. This is a common problem
+# for demonstrating recursion
 def fib(num):
     if num in [1, 0]:
         return 1
@@ -125,7 +155,9 @@ def smallest_ascending_k(arr):
 # Neuton's method
 def total_perfect_squares(A, B):
     def neutons_method(num):
-        if num == 1:
+        # Uses Neuton's bisection method to find out if the root of 
+        # the given number is an integer
+        if num in [0, 1]:
             return True
         left = 0
         right = num
@@ -205,6 +237,11 @@ if __name__ == "__main__":
                       ([1, 1], 1),
                       ([49, 100], 4))
             self.assertTrue(all(total_perfect_squares(i[0][0], i[0][1]) == i[1] for i in inputs))
+
+        def test_min_max_finder(self):
+            inputs = ((([5, 5, 5, 2, 5, 5, 5], 2), 3),)
+            print "HIHI: " + str(min_max_finder(inputs[0][0][0], inputs[0][0][1]))
+            self.assertTrue(all(min_max_finder(i[0][0], i[0][1]) == i[1] for i in inputs))
 
     unittest.main()
 
