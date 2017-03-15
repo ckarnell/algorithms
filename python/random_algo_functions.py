@@ -206,7 +206,7 @@ def minimum_level(graph_list):
         if not graph[node_name]['right']:
             graph[node_name]['right'] = right
         # Add the left/right nodes to the graph if they're not
-        # already in
+        # already in the graph
         if left and left not in graph:
             graph[left] = {'left': '', 'right': ''}
         if right and right not in graph:
