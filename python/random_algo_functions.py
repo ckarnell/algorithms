@@ -123,20 +123,21 @@ def anagram_checker(str1, str2):
 
 # Validates strings with different combinations of brackets
 def bracket_validator(brack):
-    openers, closers = ['{', '[', '('], ['}', ']', ')']
+    brack_d = {')': '(', '}': '{', ']': '['}
     stack = []
     for c in brack:
-        if c in openers:
+        if c in brack_d.values():
             stack.append(c)
-        elif c in closers:
+        elif c in brack_d.keys():
             try:
                 char = stack.pop(-1)
-                if char != c:
+                if brack_d[char] != c:
                     return False
             except IndexError:
                 return False
-    if not stack:
-        return True
+    if stack:
+        return False
+    return True
 
 # You have an array of numbers. You want this array of numbers to be in ascending order. 
 # Consider a number d. You can add/subtract any number in your array by any number <= d. 
