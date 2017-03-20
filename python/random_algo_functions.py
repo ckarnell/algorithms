@@ -241,6 +241,18 @@ def minimum_level(graph_list):
         level += 1
     return level
 
+# Given two lists and a target number, return one member of
+# each list who's sum is the target number in O(2*n) time.
+# If no such pair exists return False.
+def target_number(A, B, target_num):
+    pass
+    b_dict = {b - target_num: b for b in B}
+    for a in A:
+        diff = target_num - a
+        if diff in b_dict.keys():
+            return [a, b_dict[diff]]
+    return False
+
 if __name__ == "__main__":
     import unittest
 
