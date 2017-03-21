@@ -245,12 +245,12 @@ def minimum_level(graph_list):
 # each list who's sum is the target number in O(2*n) time.
 # If no such pair exists return False.
 def target_number(A, B, target_num):
-    pass
-    b_dict = {b - target_num: b for b in B}
+    b_dict = {target_num - b: b for b in B}
     for a in A:
-        diff = target_num - a
-        if diff in b_dict.keys():
-            return [a, b_dict[diff]]
+        try:
+            return [a, b_dict[a]]
+        except KeyError:
+            continue
     return False
 
 if __name__ == "__main__":
@@ -315,6 +315,11 @@ if __name__ == "__main__":
                       (['a,b,c', 'b,,e', 'c,f,g', 'e,j,k', 'f,l,m', 'g,n,o'], 1))
 
             self.assertTrue(all(minimum_level(i[0]) == i[1] for i in inputs))
+
+        def test_target_number(self):
+            inputs = ((([1, 3, 5], [10, 50, 100], 103), [3, 100]), 
+                      (([5, 5, 5], [10, 10, 20], 62), False))
+            self.assertTrue(all(target_number(*i[0]) == i[1] for i in inputs))
 
     unittest.main()
 
