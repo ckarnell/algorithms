@@ -253,6 +253,32 @@ def target_number(A, B, target_num):
             continue
     return False
 
+# Given a string made of only 1's, 0's, and X's, return a list of 
+# every combination of the string if the X's were replaced with either 0's or 1's.
+def binary_string_replace(inpt):
+    d = {}
+    cur_key = 0
+    last_ind = 0
+
+    # Separate into chunks, each containing an X except the last
+    for ind in range(len(inpt)):
+        if inpt[ind].upper() == 'X':
+            cur_str = inpt[last_ind:ind]
+            d[cur_key] = [cur_str+'0', cur_str+'1']
+            last_ind = ind + 1
+            cur_key += 1
+    d[cur_key] = [inpt[last_ind:]]
+
+    # Compile every combination of the ordered chunks
+    result = []
+    for key in d:
+        if not result:
+            result.extend(d[key])
+            continue
+        result = [head + tail for head in result for tail in d[key]]
+    return result
+
+
 if __name__ == "__main__":
     import unittest
 
@@ -320,6 +346,11 @@ if __name__ == "__main__":
             inputs = ((([1, 3, 5], [10, 50, 100], 103), [3, 100]), 
                       (([5, 5, 5], [10, 10, 20], 62), False))
             self.assertTrue(all(target_number(*i[0]) == i[1] for i in inputs))
+
+        def test_binary_string_replace(self):
+            inputs = (['01X', ['010', '011']], ['0X1', ['001', '011']], ['', ['']],
+                      ['XXX', ['000', '001', '010', '011', '100', '101', '110', '111']])
+            self.assertTrue(all(binary_string_replace(i[0]) == i[1] for i in inputs))
 
     unittest.main()
 
