@@ -278,6 +278,32 @@ def binary_string_replace(inpt):
         result = [head + tail for head in result for tail in d[key]]
     return result
 
+# Given an array of numbers and a target number, this function
+# finds the two values in the array who's sum is the closest
+# to the target number without going over.
+def find_inds_closest_to_sum(arr, trgt_num):
+    min_diff = sys.maxint
+    left = 0
+    right = len(arr) - 1
+    results = []
+    while left != right:
+        left_val, right_val = arr[left], arr[right]
+        curr_diff = left_val + right_val - trgt_num
+        # If the value is positive the numbers were too high
+        if curr_diff > 0:
+            right -= 1 # Since the number too high, make the right number smaller
+        else:
+            # Check for a new minimum and update values accordingly
+            curr_diff = abs(curr_diff)
+            if curr_diff < min_diff:
+                results = [left_val, right_val]
+                # Return if we found an optimal result
+                if curr_diff == 0:
+                    return results
+                min_diff = curr_diff
+            left += 1 # Since the number was negative, make the right number smaller
+    return results
+
 
 if __name__ == "__main__":
     import unittest
