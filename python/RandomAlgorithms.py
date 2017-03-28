@@ -326,6 +326,21 @@ def longest_increasing_slice(arr):
         max_slice = curr_slice
     return max_slice
 
+# Returns length of the longest increasing subsequence
+# in arr of size n
+def longest_increasing_subseq(arr):
+    if arr:
+        track_increase = [1]*len(arr)
+    else:
+        return 0
+
+    for i in range(len(arr)):
+        for j in range(i): # O(n*((n+1)/2))
+            if arr[j] < arr[i]:
+                if track_increase[i] < track_increase[j] + 1:
+                    track_increase[i] = track_increase[j] + 1
+    return max(track_increase)
+
 if __name__ == "__main__":
     import unittest
 
@@ -403,6 +418,13 @@ if __name__ == "__main__":
             inputs = ([[1, 2, 3, 2, 1], [1, 2, 3]], [[10, 4, 5, 6, 3, 10, 11, 12, 13], [3, 10, 11, 12, 13]],
                       [[], []], [[0], [0]])
             self.assertTrue(all(longest_increasing_slice(i[0]) == i[1] for i in inputs))
+
+        def test_longest_increasing_subseq(self):
+            inputs = ([[1, 2, 3, 2, 1], len([1, 2, 3])], [[10, 4, 5, 6, 3, 10, 11, 12, 13], len([4, 5, 6, 10, 11, 12, 13])],
+                      [[10, 22, 9, 33, 21, 50, 41, 60, 80], len([10, 22, 33, 50, 60, 80])],
+                      [[], 0], [[0], 1])
+            self.assertTrue(all(longest_increasing_subseq(i[0]) == i[1] for i in inputs))
+
 
     unittest.main()
 
