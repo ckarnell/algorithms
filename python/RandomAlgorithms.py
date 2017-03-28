@@ -282,16 +282,21 @@ def binary_string_replace(inpt):
 # finds the two values in the array who's sum is the closest
 # to the target number without going over.
 def find_inds_closest_to_sum(arr, trgt_num):
+    import sys
     min_diff = sys.maxint
     left = 0
     right = len(arr) - 1
     results = []
-    while left != right:
+    if arr:
         left_val, right_val = arr[left], arr[right]
+    else:
+        return False
+    while left != right:
         curr_diff = left_val + right_val - trgt_num
         # If the value is positive the numbers were too high
         if curr_diff > 0:
             right -= 1 # Since the number too high, make the right number smaller
+            right_val = arr[right]
         else:
             # Check for a new minimum and update values accordingly
             curr_diff = abs(curr_diff)
@@ -301,8 +306,12 @@ def find_inds_closest_to_sum(arr, trgt_num):
                 if curr_diff == 0:
                     return results
                 min_diff = curr_diff
-            left += 1 # Since the number was negative, make the right number smaller
-    return results
+            left += 1 # Since the number was negative, make the left number larger
+            left_val = arr[left]
+    if results:
+        return results
+    else:
+        return False
 
 # Longest increasing sequence problem - Given a sequence of n real numbers A(1) ... A(n),
 # determine a slice (not necessarily contiguous) of maximum length in which the 
@@ -413,6 +422,10 @@ if __name__ == "__main__":
             inputs = (['01X', ['010', '011']], ['0X1', ['001', '011']], ['', ['']],
                       ['XXX', ['000', '001', '010', '011', '100', '101', '110', '111']])
             self.assertTrue(all(binary_string_replace(i[0]) == i[1] for i in inputs))
+
+        def test_find_inds_closest_to_sum(self):
+            inputs = ([[[], 0], False], [[[1], 1], False], [[[3, 4, 5, 6, 20], 10], [4, 6]])
+            self.assertTrue(all(find_inds_closest_to_sum(*i[0]) == i[1] for i in inputs))
 
         def test_longest_increasing_slice(self):
             inputs = ([[1, 2, 3, 2, 1], [1, 2, 3]], [[10, 4, 5, 6, 3, 10, 11, 12, 13], [3, 10, 11, 12, 13]],
