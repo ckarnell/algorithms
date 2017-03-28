@@ -305,9 +305,9 @@ def find_inds_closest_to_sum(arr, trgt_num):
     return results
 
 # Longest increasing sequence problem - Given a sequence of n real numbers A(1) ... A(n),
-# determine a subsequence (not necessarily contiguous) of maximum length in which the 
-# values in the subsequence form a strictly increasing sequence.
-def longest_increasing_subseq(arr):
+# determine a slice (not necessarily contiguous) of maximum length in which the 
+# values in the slice form a strictly increasing sequence.
+def longest_increasing_slice(arr):
     try:
         el = arr[0]
         curr_slice = max_slice = [el]
@@ -399,10 +399,10 @@ if __name__ == "__main__":
                       ['XXX', ['000', '001', '010', '011', '100', '101', '110', '111']])
             self.assertTrue(all(binary_string_replace(i[0]) == i[1] for i in inputs))
 
-        def test_longest_increasing_subseq(self):
+        def test_longest_increasing_slice(self):
             inputs = ([[1, 2, 3, 2, 1], [1, 2, 3]], [[10, 4, 5, 6, 3, 10, 11, 12, 13], [3, 10, 11, 12, 13]],
                       [[], []], [[0], [0]])
-            self.assertTrue(all(longest_increasing_subseq(i[0]) == i[1] for i in inputs))
+            self.assertTrue(all(longest_increasing_slice(i[0]) == i[1] for i in inputs))
 
     unittest.main()
 
