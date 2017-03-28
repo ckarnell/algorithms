@@ -350,6 +350,22 @@ def longest_increasing_subseq(arr):
                     track_increase[i] = track_increase[j] + 1
     return max(track_increase)
 
+# Get the minimum "edit distance" between two strings - that is to say
+# the minimum number of operations between replacing a character, removing
+# a character, and adding a character that you have to do in order to make
+# string 1 into a copy of string 2.
+def min_edit_distance(str1, str2, count=0):
+    if not (str1 and str2): # If either string is empty
+        return count + len(str1) + len(str2)
+    if str1[0] == str2[0]:
+        return min_edit_distance(str1[1:], str2[1:], count)
+    else:
+        rep = min_edit_distance(str1[1:], str2[1:], count+1)
+        rem = min_edit_distance(str1[1:], str2, count+1)
+        add = min_edit_distance(str1, str2[1:], count+1)
+        return min(rep, rem, add)
+
+
 if __name__ == "__main__":
     import unittest
 
@@ -437,6 +453,11 @@ if __name__ == "__main__":
                       [[10, 22, 9, 33, 21, 50, 41, 60, 80], len([10, 22, 33, 50, 60, 80])],
                       [[], 0], [[0], 1])
             self.assertTrue(all(longest_increasing_subseq(i[0]) == i[1] for i in inputs))
+
+        def test_min_edit_distance(self):
+            inputs = ([['', 'hi'], 2], [['hey', ''], 3], [['geek', 'gesek'], 1],
+                      [['sunday', 'saturday'], 3])
+            self.assertTrue(all(min_edit_distance(*i[0]) == i[1] for i in inputs))
 
 
     unittest.main()
