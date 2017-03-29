@@ -353,7 +353,7 @@ def longest_increasing_subseq(arr):
 # Get the minimum "edit distance" between two strings - that is to say
 # the minimum number of operations between replacing a character, removing
 # a character, and adding a character that you have to do in order to make
-# string 1 into a copy of string 2.
+# string 1 into a copy of string 2. O(3^n)
 def min_edit_distance(str1, str2, count=0):
     if not (str1 and str2): # If either string is empty
         return count + len(str1) + len(str2)
@@ -364,6 +364,53 @@ def min_edit_distance(str1, str2, count=0):
         rem = min_edit_distance(str1[1:], str2, count+1)
         add = min_edit_distance(str1, str2[1:], count+1)
         return min(rep, rem, add)
+
+# More optimized dynamic version of the last solution for minimum edit
+# distance, using subproblem storage. O(n*m)
+def min_edit_distance_optimized(str1, str2):
+    m, n = len(str1), len(str2)
+    saved = [[0 for j in range(n+1)] for i in range(m+1)]
+    for i in range(m+1):
+        for j in range(n+1):
+            if not i: # If str1 is empty, add the rest of str2 to it
+                saved[i][j] = j
+            elif not j: # If str2 is empty, remove the rest of str1
+                saved[i][j] = i
+            elif str1[i-1] == str2[j-1]:
+                saved[i][j] = saved[i-1][j-1]
+            else:
+                rem = saved[i-1][j]
+                add = saved[i][j-1]
+                rep = saved[i-1][j-1]
+                saved[i][j] = 1 + min(rem, add, rep)
+    return saved[m][n]
+
+# Check if two strings are a rotation of eachother.
+def rotation_check(str1, str2):
+    if len(str1) != len(str2):
+        return False
+    str_double = str1*2
+    if str_double.count(str2):
+        return True
+    return False
+
+# Algorithm to check if a given string is a rotation of a palindrome
+# in O(n) time.
+def check_palindrom_rotation(string):
+    pass
+
+# Given an array of a stock's prices over time, return the optimal
+# buy and sell prices to maximize profit.
+def get_best_buy_sell_price(arr):
+    min_buy = arr[0]
+    max_prof = arr[1] - min_buy
+    for curr_sell in arr[2:]:
+        curr_prof = curr_sell - min_buy 
+        if curr_prof > max_prof:
+            max_prof = curr_prof
+        if curr_sell < min_buy:
+            min_buy = curr_sell
+    return max_prof
 
 
 if __name__ == "__main__":
@@ -426,7 +473,6 @@ if __name__ == "__main__":
                       (['a,b,c', 'b,d,e', 'c,f,g', 'd,h,i', 'e,j,k', 'g,l,m'], 2),
                       (['a,b,c', 'b,d,e', 'c,f,g', 'd,h,i', 'e,j,k', 'f,l,m', 'g,n,o'], 3),
                       (['a,b,c', 'b,,e', 'c,f,g', 'e,j,k', 'f,l,m', 'g,n,o'], 1))
-
             self.assertTrue(all(minimum_level(i[0]) == i[1] for i in inputs))
 
         def test_target_number(self):
@@ -458,6 +504,20 @@ if __name__ == "__main__":
             inputs = ([['', 'hi'], 2], [['hey', ''], 3], [['geek', 'gesek'], 1],
                       [['sunday', 'saturday'], 3])
             self.assertTrue(all(min_edit_distance(*i[0]) == i[1] for i in inputs))
+
+        def test_min_edit_distance_optimized(self):
+            inputs = ([['', 'hi'], 2], [['hey', ''], 3], [['geek', 'gesek'], 1],
+                      [['sunday', 'saturday'], 3])
+            self.assertTrue(all(min_edit_distance_optimized(*i[0]) == i[1] for i in inputs))
+
+        def test_rotation_check(self):
+            inputs = ([['abda', 'aabd'], True], [['racecar', 'carrace'], True], [['', ''], True],
+                      [['heythere', 'heothere'], False], [['hi', 'hihi'], False])
+            self.assertTrue(all(rotation_check(*i[0]) == i[1] for i in inputs))
+
+        def test_get_best_buy_sell_price(self):
+            inputs = ([[5, 4, 3, 2, 1], -1], [[5, 12, 1, 6, 7, 13, 6], 12])
+            self.assertTrue(all(get_best_buy_sell_price(i[0]) == i[1] for i in inputs))
 
 
     unittest.main()
