@@ -99,7 +99,7 @@ def fib(num):
     else:
         return fib(num - 1) + fib(num - 2)
 
-# Simple function that takes who sequences and returns a sequence
+# Simple function that takes two sequences and returns a sequence
 # with alternating elements.
 def alternator(seq1, seq2):
     result = zip(seq1, seq2)
@@ -222,7 +222,7 @@ def minimum_level(graph_list):
         '''
         next_level = []
         for node in nodes:
-            if not graph[node]['left'] or not graph[node]['right']:
+            if not (graph[node]['left'] and graph[node]['right']):
                 return False
             next_level.append(graph[node]['left'])
             next_level.append(graph[node]['right'])
@@ -411,7 +411,6 @@ def get_best_buy_sell_price(arr):
         if curr_sell < min_buy:
             min_buy = curr_sell
     return max_prof
-
 
 if __name__ == "__main__":
     import unittest
