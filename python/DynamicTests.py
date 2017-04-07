@@ -40,5 +40,10 @@ class DynamicTest(unittest.TestCase):
         inputs = ([[5, 4, 3, 2, 1], -1], [[5, 12, 1, 6, 7, 13, 6], 12])
         self.assertTrue(all(get_best_buy_sell_price(i[0]) == i[1] for i in inputs))
 
+    def test_get_number_of_rooms(self):
+        inputs = ([[(1, 3)], 1], [[(1, 5), (6, 7), (7, 8), (9, 24)], 1],
+                  [[(1, 10), (3, 5), (11, 15), (4, 8), (14, 16)], 3]) 
+        self.assertTrue(all(get_number_of_rooms(i[0]) == i[1] for i in inputs))
+
 if __name__ == '__main__':
     unittest.main()

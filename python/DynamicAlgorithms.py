@@ -153,7 +153,7 @@ def min_edit_distance_optimized(str1, str2):
                 saved[i][j] = j
             elif not j: # If str2 is empty, remove the rest of str1
                 saved[i][j] = i
-            elif str1[i-1] == str2[j-1]:
+            elif str1[i-1] == str2[j-1]: # If chars are equal, add nothing
                 saved[i][j] = saved[i-1][j-1]
             else:
                 rem = saved[i-1][j]
@@ -174,3 +174,24 @@ def get_best_buy_sell_price(arr):
         if curr_sell < min_buy:
             min_buy = curr_sell
     return max_prof
+
+# Given an array of pairs of integers, the first representing the start time
+# for a meeting and the second representing the end of the meeting, output
+# the minimum number of rooms you'd need to have for meetings without having
+# meetings overlap.
+def get_number_of_rooms(meetings):
+    meetings = sorted(meetings)
+    max_rooms = 1
+    last_rooms = 1
+    last_meeting = meetings[0]
+    if len(meetings) == 1:
+        return 1
+    for meeting in meetings[1:]:
+        if meeting[0] < last_meeting[1]:
+            last_rooms += 1
+            if last_rooms > max_rooms:
+                max_rooms = last_rooms
+        else:
+            last_rooms = 1
+        last_meeting = meeting
+    return max_rooms
